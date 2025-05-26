@@ -1,0 +1,13 @@
+---
+- name: Add Docker registry mirror
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "registry-mirrors": [
+          "https://docker.iranserver.com"
+        ]
+      }
+    mode: '0644'
+  notify: restart docker
+

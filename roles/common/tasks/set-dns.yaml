@@ -1,0 +1,16 @@
+---
+- name: Add first nameserver to /etc/resolv.conf
+  become: yes
+  lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver 78.157.42.100"
+    state: present
+    create: yes
+
+- name: Add second nameserver to /etc/resolv.conf
+  become: yes
+  lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver 78.157.42.101"
+    state: present
+    create: yes

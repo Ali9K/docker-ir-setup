@@ -1,0 +1,15 @@
+---
+- name: Set DNS
+  include_tasks: set-dns.yaml
+
+- name: Pre-installation tasks
+  include_tasks: requirements.yaml
+
+- name: Install docker and other packages
+  include_tasks: install-docker.yaml
+
+- name: Set registery
+  include_tasks: set-registery.yaml
+
+- name: Configure docker
+  include_tasks: config-docker.yaml

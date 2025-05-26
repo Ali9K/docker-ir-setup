@@ -1,0 +1,7 @@
+---
+- name: Uninstall old versions
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ packages_to_remove }}"

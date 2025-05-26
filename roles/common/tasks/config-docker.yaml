@@ -1,0 +1,47 @@
+---
+- name: Create a group named 'docker'
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add user to 'docker' group
+  ansible.builtin.user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes
+    
+- name: Notify user to log out and back in
+  ansible.builtin.debug:
+    msg: "New user must log out and log back in for new group memberships to take effect."
+
+- name: start and enable docker
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+    - docker
+    - containerd
+    
+ #This task is optional. If you don't want to configure logging drivers, you can comment out this task.
+#Make sure you have the community.general collection
+- name: Ensure /etc/docker directory exists
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: Set and configure log driver
+  copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "log-driver": "json-file",
+        "log-opts": {
+          "max-size": "10m",
+          "max-file": "5",
+          "compress": "true"
+        }
+      }
+    mode: '0644'
+  notify: restart docker
+
