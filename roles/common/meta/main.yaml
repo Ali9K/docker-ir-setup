@@ -1,0 +1,19 @@
+galaxy_info:
+  role_name: install_docker
+  author: alch
+  description: This role automates the installation and configuration of Docker on Debian-based systems. It configures DNS and Docker registry mirror to bypass Docker access restrictions and deliver a fully functional, ready-to-use Docker environment.
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - oracular
+
+dependencies: []
