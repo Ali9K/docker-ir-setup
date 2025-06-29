@@ -1,0 +1,7 @@
+---
+  - name: Execute only if the OS is debian base
+    include_tasks: docker-debian.yaml
+    when: ansible_facts["os_family"] == "Debian"
+    tags:
+      - docker
+      - debian

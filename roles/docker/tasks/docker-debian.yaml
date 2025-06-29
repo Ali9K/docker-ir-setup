@@ -1,15 +1,35 @@
 ---
 - name: Set DNS
   include_tasks: set-dns.yaml
+  tags:
+    - docker
+    - debian
+    - dns
 
 - name: Pre-installation tasks
   include_tasks: requirements.yaml
+  tags:
+    - docker
+    - debian
+    - preparing
 
 - name: Install docker and other packages
   include_tasks: install-docker.yaml
+  tags:
+    - docker
+    - debian
+    - install
 
 - name: Set registery
   include_tasks: set-registery.yaml
+  tags:
+    - docker
+    - debian
+    - registery
 
 - name: Configure docker
   include_tasks: config-docker.yaml
+  tags:
+    - docker
+    - debian
+    - configure

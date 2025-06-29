@@ -1,0 +1,75 @@
+---
+- name: Create a group named 'docker'
+  ansible.builtin.group:
+    name: docker
+    state: present
+  tags:
+    - docker
+    - debian
+    - configure
+    - docker-group
+
+- name: Add users to 'docker' group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  loop: "{{ users }}"
+  tags:
+    - docker
+    - debian
+    - configure
+    - add-user
+  
+- name: Reset ssh connection to apply users changes.
+  meta: reset_connection
+  tags:
+    - docker
+    - debian
+    - configure
+    - docker-group
+    - add-user
+    - reset-connection
+
+- name: start and enable docker
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ services_to_enable }}"
+  tags:
+    - docker
+    - debian
+    - configure
+    - enable-service
+
+ #This task is optional. If you don't want to configure logging drivers, you can comment out this task or use tags.
+- name: Ensure /etc/docker directory exists
+  file:
+    path: /etc/docker
+    state: directory
+  tags:
+    - docker
+    - debian
+    - configure
+    - log-driver
+
+- name: Set and configure log driver
+  copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "log-driver": "{{ docker_log_driver }}",
+        "log-opts": {
+          "max-size": "{{ docker_log_max_size }}",
+          "max-file": "{{ docker_log_max_file }}",
+          "compress": "{{ docker_log_compress }}"
+        }
+      }
+    mode: '0644'
+  notify: restart docker
+  tags:
+    - docker
+    - debian
+    - configure
+    - log-driver

@@ -5,3 +5,7 @@
     name: "{{ item }}"
     state: absent
   loop: "{{ packages_to_remove }}"
+  tags:
+    - docker
+    - debian
+    - preparing

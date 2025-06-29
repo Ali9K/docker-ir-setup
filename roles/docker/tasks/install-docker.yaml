@@ -1,24 +1,37 @@
 ---
   - name: Install docker requirements
-    notify: update apt cache
     apt:
+      update_cache: yes
       name: "{{ item }}"
       state: present
-    loop:
-      - curl
-      - ca-certificates
+    loop: "{{ requirements_packages }}"
+    tags:
+      - docker
+      - debian
+      - install
+      - install-requirements
 
   - name: create keyrings directory if it doesn't exist and set the permissions
     ansible.builtin.file:
       path: /etc/apt/keyrings
       state: touch
       mode: '0755'
+    tags:
+      - docker
+      - debian
+      - install
+      - keyrings
 
   - name: Download docker GPG key
     get_url:
       url: https://download.docker.com/linux/ubuntu/gpg
       dest: /etc/apt/keyrings/docker.asc
       mode: '0644'
+    tags:
+      - docker
+      - debian
+      - install
+      - gpg-key
       
   - name: Add Docker APT source.list
     copy:
@@ -27,14 +40,19 @@
         deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable
       mode: '0644'
     notify: update apt cache
+    tags:
+      - docker
+      - debian
+      - install
+      - docker-sourcelist
 
   - name: Install the Docker packages
     apt:
       name: "{{ item }}"
       state: present
-    loop:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-buildx-plugin
-      - docker-compose-plugin
+    loop: "{{ docker_packages }}"
+    tags:
+      - docker
+      - debian
+      - install
+      - docker-packages
